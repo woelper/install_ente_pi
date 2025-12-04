@@ -43,11 +43,15 @@ Visit https://ente.io/help/self-hosting/ for more details!
 
 `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ente-io/ente/main/server/quickstart.sh)"`
 
+### Fix uploads
 After this, uploads won't work if you access the raspberry pi from another machine. To enable this, make sure the `museum.yaml` in `my-ente`
 contains your IP address instead of `localhost`. Also disable fast uploads in the web UI.
 
+### Fix storage limits
 Next, you will run into a storage limit. I was unable to use the CLI, if that is the case for you, change this in SQL:
 
 `docker exec -it my-ente-postgres-1 psql -U pguser -d ente_db` (pay attention to use the right db name, try something like `docker stats` to see them)
+
+`\l` to list databases, make sure `storage_bonus` exists
 
 then run `INSERT INTO storage_bonus (bonus_id, user_id, storage, type, valid_till) VALUES ('self-hosted-myself', (SELECT user_id FROM users LIMIT 1), 1099511627776, 'ADD_ON_SUPPORT', 0);`
