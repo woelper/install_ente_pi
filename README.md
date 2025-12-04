@@ -52,6 +52,15 @@ Next, you will run into a storage limit. I was unable to use the CLI, if that is
 
 `docker exec -it my-ente-postgres-1 psql -U pguser -d ente_db` (pay attention to use the right db name, try something like `docker stats` to see them)
 
-`\l` to list databases, make sure `storage_bonus` exists
+Get your user id:
+
+```sql
+SELECT
+    user_id,
+    name,
+    to_timestamp(creation_time / 1000000) AS account_created   -- converts microseconds → readable date
+FROM users
+ORDER BY creation_time;
+```
 
 then run `INSERT INTO storage_bonus (bonus_id, user_id, storage, type, valid_till) VALUES ('self-hosted-myself', (SELECT user_id FROM users LIMIT 1), 1099511627776, 'ADD_ON_SUPPORT', 0);`
